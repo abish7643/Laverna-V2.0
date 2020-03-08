@@ -15,14 +15,14 @@
 
 QTRSensors qtr;
 
-const uint8_t SensorCount = 6;
+const uint8_t SensorCount = 8;
 uint16_t sensorValues[SensorCount];
 
 void setup()
 {
   // configure the sensors
   qtr.setTypeRC();
-  qtr.setSensorPins((const uint8_t[]){3, 4, 5, 6, 7, 8}, SensorCount);
+  qtr.setSensorPins((const uint8_t[]){2, 3, 4, 5, 6, 7, 8, 9}, SensorCount);
   qtr.setEmitterPin(13);
 
   Serial.begin(9600);

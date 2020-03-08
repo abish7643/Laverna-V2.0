@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:nano",
+    "configuration": "cpu=atmega328old",
+    "sketch": "LavernaV2/LavernaV2.ino",
+    "port": "/dev/ttyUSB0"
+}

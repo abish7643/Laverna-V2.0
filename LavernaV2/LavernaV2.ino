@@ -31,7 +31,7 @@ int blackLine = 1;
 
 //Black Line
 float Kp = 0.1;
-float Kd = 1;
+float Kd = 0.5;
 float Ki = 1/10000;
 
 unsigned int position;
@@ -51,18 +51,18 @@ float Ki = 1/10000;
 #define invertionstatusLED A5
 
 void setup(){
-  Serial.begin(9600);
+  //Serial.begin(9600);
   qtrrc.setTypeRC();
   qtrrc.setSensorPins((const uint8_t[]){3, 4, 5, 6, 7, 8}, SensorCount);
   qtrEnd.setTypeRC();
   qtrEnd.setSensorPins((const uint8_t[]){2, 9}, EndSensorCount);
-  qtrrc.setEmitterPin(12); //LEDON Pin - 22
+  //qtrrc.setEmitterPin(12); //LEDON Pin - 22
 
   while(button.isPressed()){
-    digitalWrite(statusLED, LOW);
+    digitalWrite(statusLED, HIGH);
   }
   digitalWrite(statusLED, LOW);
-  Serial.println("Calibrating");   
+  //Serial.println("Calibrating");   
   
   unsigned int i;
   for(i=0; i<150; i++){
@@ -70,7 +70,7 @@ void setup(){
     delay(10); 
   }
   set_motors(0,0);
-  Serial.println("Calibrated");
+  //Serial.println("Calibrated");
   delay(500);
   
 }
@@ -78,9 +78,9 @@ void setup(){
 
 void loop(){
   while(button.isPressed()){
+    digitalWrite(statusLED, HIGH);
   }
     delay(500);
-    digitalWrite(statusLED, LOW);
     //checkPIDValues(readPIDConstants);
     
   while(1){
@@ -235,7 +235,7 @@ void checkAcuteWithCount(int positionLine){
 void checkAcuteBlackLine(int positionLine, int ValueofEndSensors[2]){
     if (ValueofEndSensors[1] >= 2000 && ValueofEndSensors[0] <= 1000){
       if (positionLine > 2000 && positionLine < 3000) {
-          Serial.println("Acute Right Triggered");
+          //Serial.println("Acute Right Triggered");
           set_motors(90, -100);
           delay(110);
         }
@@ -243,7 +243,7 @@ void checkAcuteBlackLine(int positionLine, int ValueofEndSensors[2]){
 
     if (ValueofEndSensors[0] >= 2000 && ValueofEndSensors[1] <= 1000){
       if (positionLine > 2000 && positionLine < 3000) {
-          Serial.println("Acute Left Triggered");
+          //Serial.println("Acute Left Triggered");
           set_motors(-100, 90);
           delay(110);   
         }
@@ -254,7 +254,7 @@ void checkAcuteBlackLine(int positionLine, int ValueofEndSensors[2]){
 void checkAcuteWhiteLine(int positionLine, int ValueofEndSensors[2]){
     if (ValueofEndSensors[0] >= 2000 && ValueofEndSensors[1] <= 1000){
       if (positionLine > 2000 && positionLine < 3000) {
-          Serial.println("Acute Right Triggered");
+          //Serial.println("Acute Right Triggered");
           set_motors(90, -90);
           delay(100);
         }
@@ -262,7 +262,7 @@ void checkAcuteWhiteLine(int positionLine, int ValueofEndSensors[2]){
 
     if (ValueofEndSensors[1] >= 2000 && ValueofEndSensors[0] <= 1000){
       if (positionLine > 2000 && positionLine < 3000) {
-          Serial.println("Acute Left Triggered");
+          //Serial.println("Acute Left Triggered");
           set_motors(-90, 90);
           delay(100);   
         }
@@ -285,11 +285,11 @@ void putLineState(int lineState){
   if (lineState == 1){
       position = qtrrc.readLineBlack(sensorValues);
       digitalWrite(invertionstatusLED, LOW);
-      Serial.println("BlackLine");
+      //Serial.println("BlackLine");
     } else {
       position = qtrrc.readLineWhite(sensorValues);
       digitalWrite(invertionstatusLED, HIGH);
-      Serial.println("WhiteLine");
+      //Serial.println("WhiteLine");
       }
   }
 
@@ -301,11 +301,11 @@ void checkPIDValues(int ReadState){
       const float KD = map(d, 0, 1023, 1, 200);
       Kp = KP/20;
       Kd = KD/20;
-      Serial.print("  Kp : ");
-      Serial.print(Kp);
-      Serial.print("  Kd : ");
-      Serial.print(Kd);
-      Serial.println(" ");
+      //Serial.print("  Kp : ");
+      //Serial.print(Kp);
+      //Serial.print("  Kd : ");
+      //Serial.print(Kd);
+      //Serial.println(" ");
       readPIDConstants = 1;
   }
 }
@@ -318,15 +318,15 @@ void turnHandlerWithoutPID(int endSensors[2], int otherSensors[6], int linePosit
   LeftendSensor = endSensors[0];
   RightendSensor = endSensors[1];
   if (blackLine == 1){
-    if (LeftendSensor >= 1000 && RightendSensor <= 1000) {
+    if (LeftendSensor >= 800 && RightendSensor <= 800) {
       turn = 1;
-      Serial.println("ReadytoTurnLeft");
-      Serial.print(LeftendSensor);
+      //Serial.println("ReadytoTurnLeft");
+      //Serial.print(LeftendSensor);
     }
-    if (RightendSensor >= 1000 && LeftendSensor <= 1000) {
+    if (RightendSensor >= 800 && LeftendSensor <= 800) {
       turn = 2;
-      Serial.println("ReadytoTurnRight");
-      Serial.print(RightendSensor);
+      //Serial.println("ReadytoTurnRight");
+      //Serial.print(RightendSensor);
     }
     for (int i = 0; i <= 6; i++){
       if (otherSensors[i] < 500){
@@ -338,23 +338,27 @@ void turnHandlerWithoutPID(int endSensors[2], int otherSensors[6], int linePosit
     if (numberWhiteSensors >= 6){
       numberWhiteSensors = 6;
       }
-    Serial.println(numberWhiteSensors);
+    //Serial.println(numberWhiteSensors);
     if (numberWhiteSensors == 6){
       if (turn==1){
         set_motors(-70, 70);
-        delay(20);
-        if (endSensors[0] > 1200 || otherSensors[0] > 500){
+        digitalWrite(statusLED, HIGH);
+        delay(40);
+        if (endSensors[0] > 800 || otherSensors[0] > 350){
           turn = 0;
+          digitalWrite(statusLED, LOW);
         }
-        Serial.println("LeftTurnWithoutPID");
+        //Serial.println("LeftTurnWithoutPID");
         }
       if (turn==2){
         set_motors(70, -70);
-        delay(20);
-        if (endSensors[1] > 1200 || otherSensors[5] > 500){
+        digitalWrite(statusLED, HIGH);
+        delay(40);
+        if (endSensors[1] > 800 || otherSensors[5] > 350){
           turn = 0;
+          digitalWrite(statusLED, LOW);
         }
-        Serial.println("RightTurnWithoutPID");
+        //Serial.println("RightTurnWithoutPID");
         }
       }
     }
@@ -363,13 +367,13 @@ void turnHandlerWithoutPIDWhiteLine(int endSensors[2], int otherSensors[6], int 
   if (blackLine == 0){
     if (LeftendSensor <= 1000 && RightendSensor >= 1000) {
       turn = 1;
-      Serial.println("ReadytoTurnLeft");
-      Serial.print(LeftendSensor);
+      //Serial.println("ReadytoTurnLeft");
+      //Serial.print(LeftendSensor);
     }
     if (RightendSensor <= 1000 && LeftendSensor >= 1000) {
       turn = 2;
-      Serial.println("ReadytoTurnRight");
-      Serial.print(RightendSensor);
+      //Serial.println("ReadytoTurnRight");
+      //Serial.print(RightendSensor);
     }
     for (int i = 0; i <= 6; i++){
       if (otherSensors[i] > 500){
@@ -381,7 +385,7 @@ void turnHandlerWithoutPIDWhiteLine(int endSensors[2], int otherSensors[6], int 
     if (numberWhiteSensors >= 6){
       numberWhiteSensors = 6;
       }
-    Serial.println(numberWhiteSensors);
+    //Serial.println(numberWhiteSensors);
     if (numberWhiteSensors == 6){
       if (turn==1){
         set_motors(-100, 100);
