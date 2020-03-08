@@ -6,9 +6,7 @@
 // digital pin 2, or you can leave it disconnected and remove the call to
 // setEmitterPin().
 //
-// The main loop of the example reads the raw sensor values (uncalibrated). You
-// can test this by taping a piece of 3/4" black electrical tape to a piece of
-// white paper and sliding the sensor across it. It prints the sensor values to
+//Prints the sensor values to
 // the serial monitor as numbers from 0 (maximum reflectance) to 2500 (minimum
 // reflectance; this is the default RC timeout, which can be changed with
 // setTimeout()).
