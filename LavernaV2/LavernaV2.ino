@@ -11,6 +11,8 @@ uint16_t sensorValues[SensorCount];
 const uint8_t EndSensorCount = 2;
 uint16_t endsensorValues[EndSensorCount];
 
+int numberWhiteSensors;
+
 //#define LeftMostSensor 2
 //#define RightMostSensor 9
 
@@ -33,7 +35,7 @@ int blackLine = 1;
 float Kp = 0.1;
 float Kd = 0.5;
 float Ki = 1/10000;
-
+const int max = 80;
 unsigned int position;
 
 /*
@@ -55,9 +57,10 @@ void setup(){
   qtrrc.setTypeRC();
   qtrrc.setSensorPins((const uint8_t[]){3, 4, 5, 6, 7, 8}, SensorCount);
   qtrEnd.setTypeRC();
+  qtrrc.setDimmingLevel(31);
   qtrEnd.setSensorPins((const uint8_t[]){2, 9}, EndSensorCount);
-  //qtrrc.setEmitterPin(12); //LEDON Pin - 22
-
+  //qtrrc.setEmitterPin(A5); //LEDON Pin - 22
+  
   while(button.isPressed()){
     digitalWrite(statusLED, HIGH);
   }
@@ -72,6 +75,7 @@ void setup(){
   set_motors(0,0);
   //Serial.println("Calibrated");
   delay(500);
+  
   
 }
 
@@ -104,6 +108,7 @@ void loop(){
     putLineState(blackLine);
     turnHandlerWithoutPID(endsensorValues, sensorValues, position);
     //turnHandlerWithoutPIDWhiteLine(endsensorValues, sensorValues, position);
+    //Serial.println(numberWhiteSensors);
     /*
     if (blackLine == 1){
       //checkAcuteBlackLine(position, endsensorValues);
@@ -148,7 +153,6 @@ void loop(){
     //checkAcuteWithCount(position);
     //checkAcuteWithEndSensors(position, endsensorValues);
     //Serial.println(power_difference);  
-    const int max = 100;
     if(power_difference > max)
       power_difference = max;
     if(power_difference < -max)
@@ -310,7 +314,6 @@ void checkPIDValues(int ReadState){
   }
 }
 int turn; //Left = 1 & Right = 2
-int numberWhiteSensors = 0;
 int highestValue;
 int LeftendSensor;
 int RightendSensor;
@@ -318,17 +321,19 @@ void turnHandlerWithoutPID(int endSensors[2], int otherSensors[6], int linePosit
   LeftendSensor = endSensors[0];
   RightendSensor = endSensors[1];
   if (blackLine == 1){
-    if (LeftendSensor >= 800 && RightendSensor <= 800) {
+    if (LeftendSensor >= 1200 && RightendSensor <= 1200) {
       turn = 1;
+      //digitalWrite(statusLED, HIGH);
       //Serial.println("ReadytoTurnLeft");
       //Serial.print(LeftendSensor);
     }
-    if (RightendSensor >= 800 && LeftendSensor <= 800) {
+    if (RightendSensor >= 1200 && LeftendSensor <= 1200) {
       turn = 2;
+      //digitalWrite(statusLED, HIGH);
       //Serial.println("ReadytoTurnRight");
       //Serial.print(RightendSensor);
     }
-    for (int i = 0; i <= 6; i++){
+/*    for (int i = 0; i <= 6; i++){
       if (otherSensors[i] < 500){
        numberWhiteSensors++;
       }else{
@@ -339,28 +344,33 @@ void turnHandlerWithoutPID(int endSensors[2], int otherSensors[6], int linePosit
       numberWhiteSensors = 6;
       }
     //Serial.println(numberWhiteSensors);
-    if (numberWhiteSensors == 6){
+    */
+    //if (numberWhiteSensors == 6){
+    if (otherSensors[0]<500 && otherSensors[1]<500 && otherSensors[2]<500 && otherSensors[3]<500 && otherSensors[4]<500 && otherSensors[5]<500){
       if (turn==1){
         set_motors(-70, 70);
         digitalWrite(statusLED, HIGH);
-        delay(40);
-        if (endSensors[0] > 800 || otherSensors[0] > 350){
+        delay(25);
+        if (endSensors[0] > 1200 || otherSensors[0] > 400){
           turn = 0;
-          digitalWrite(statusLED, LOW);
+          digitalWrite(statusLED, HIGH);
+          //numberWhiteSensors = 0;
         }
         //Serial.println("LeftTurnWithoutPID");
         }
       if (turn==2){
         set_motors(70, -70);
         digitalWrite(statusLED, HIGH);
-        delay(40);
-        if (endSensors[1] > 800 || otherSensors[5] > 350){
+        delay(25);
+        if (endSensors[1] > 1200 || otherSensors[5] > 400){
           turn = 0;
-          digitalWrite(statusLED, LOW);
+          digitalWrite(statusLED, HIGH);
+          //numberWhiteSensors = 0;
         }
         //Serial.println("RightTurnWithoutPID");
         }
       }
+      digitalWrite(statusLED, LOW);
     }
   }
 void turnHandlerWithoutPIDWhiteLine(int endSensors[2], int otherSensors[6], int linePosition){

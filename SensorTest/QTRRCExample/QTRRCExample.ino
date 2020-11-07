@@ -22,9 +22,8 @@ void setup()
 {
   // configure the sensors
   qtr.setTypeRC();
-  qtr.setSensorPins((const uint8_t[]){2,3, 4, 5, 6, 7, 8, 9}, SensorCount);
-  qtr.setEmitterPin(13);
-
+  qtr.setSensorPins((const uint8_t[]){2, 3, 4, 5, 6, 7, 8, 9}, SensorCount);
+  qtr.setEmitterPin(A5);
   delay(500);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH); // turn on Arduino's LED to indicate we are in calibration mode
@@ -63,7 +62,7 @@ void loop()
 {
   // read calibrated sensor values and obtain a measure of the line position
   // from 0 to 5000 (for a white line, use readLineWhite() instead)
-  uint16_t position = qtr.readLineBlack(sensorValues);
+  uint16_t position = qtr.readLineBlack(sensorValues, QTRReadMode::OnAndOff);
 
   // print the sensor values as numbers from 0 to 1000, where 0 means maximum
   // reflectance and 1000 means minimum reflectance, followed by the line
