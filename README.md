@@ -9,9 +9,9 @@ the 8 participated line follower competitions conducted across different college
 
 ## Images
 
-![Laverna - The Goddess Of Death](https://github.com/abish7643/Laverna-V2.0/tree/master/Pictures/Laverna_LineFollowerBot_1.jpg?raw=true)
+![Laverna - The Goddess Of Death](https://github.com/abish7643/Laverna-V2.0/blob/master/Pictures/Laverna_%20LineFollowerBot_1.jpg?raw=true)
 
-![Laverna - The Goddess Of Death](https://github.com/abish7643/Laverna-V2.0/tree/master/Pictures/Laverna_LineFollowerBot_2.jpg?raw=true)
+![Laverna - The Goddess Of Death](https://github.com/abish7643/Laverna-V2.0/blob/master/Pictures/Laverna_LineFollowerBot_2.jpg?raw=true)
 
 
 ## Prerequisites
